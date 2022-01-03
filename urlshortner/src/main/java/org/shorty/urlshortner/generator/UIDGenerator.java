@@ -1,5 +1,6 @@
 package org.shorty.urlshortner.generator;
 
+import org.shorty.urlshortner.model.ShortURLEntity;
 import org.shorty.urlshortner.model.TokenRange;
 
 import java.util.HashMap;
@@ -24,10 +25,10 @@ public class UIDGenerator {
     final static Map<Character, Integer> revDictionary=new HashMap<>();
 
     static {
-        IntStream.range(1,62).forEach(i -> revDictionary.put(dictionary[i],i));
+        IntStream.range(0,62).forEach(i -> revDictionary.put(dictionary[i],i));
     }
 
-    public String generate(){
+    public ShortURLEntity generate(){
         long id;
         if(tokenRange.getCurrentPointer() < tokenRange.getUpperBound()) {
             id=tokenRange.getCurrentPointer();
@@ -37,20 +38,21 @@ public class UIDGenerator {
             id=tokenRange.getCurrentPointer();
             tokenRange=tokenGenerator.getTokenBound();
         }
+        long tempid=id;
         StringBuilder sb=new StringBuilder();
-        while(id>0){
-            long div=id/62;
-            int rem=(int) id%62;
+        while(tempid>0){
+            long div=tempid/62;
+            int rem=(int) tempid%62;
             sb.append(dictionary[rem]);
-            id=div;
+            tempid=div;
         }
-        return sb.toString();
+        return new ShortURLEntity(sb.toString(),id);
     }
 
     public long reverse(String uid){
         int len=uid.length();
         long dbId=0;
-        for(int i=len-1; i>=0; i--){
+        for(int i=0; i<len; i++){
             char a=uid.charAt(i);
             double multiple=Math.pow(62,i);
             int pos=revDictionary.get(a);

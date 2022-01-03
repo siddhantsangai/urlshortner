@@ -3,8 +3,8 @@ package org.shorty.urlshortner.generator;
 import org.shorty.urlshortner.model.TokenRange;
 
 public class TokenGenerator {
-    private long currentCounter;
-    private long offset;
+    private long currentCounter=1;
+    private long offset=10;
 
     public void setCurrentCounter(long currentCounter) {
         this.currentCounter = currentCounter;
